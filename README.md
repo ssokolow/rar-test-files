@@ -1,7 +1,7 @@
 # RAR Test Files
 
 This repository contains a collection of minimal, legally redistributable `.rar`
-and `.cbr` test files suitable for inclusion in test suites for program that
+and `.cbr` test files suitable for inclusion in test suites for programs that
 incorporate RAR extraction functionality.
 
 ## Explain
@@ -33,10 +33,11 @@ These were made using the digital delivery copy of the license but I also paid
 for the "WinRAR Physical Delivery on CD" option as extra proof of purchase. When
 that arrives, I'll take a confirmation photo and add it to this repository.
 
-Aside from that, cleverbridge (the fulfillment company involved) doesn't give me
-much uniquely identifiable stuff I could share. I obviously can't share the key
-and I don't know whether sharing my order reference number would open me up to
-the risk of someone else impersonating me.
+Aside from that, cleverbridge (the fulfillment company involved) doesn't give
+any uniquely identifiable stuff I could share. I obviously can't share the key
+and, according to a letter Clint Basinger of Lazy Game Reviews
+[received](https://www.youtube.com/watch?v=FoclTVcjkXE) when he bought a WinRAR
+license, I shouldn't share the order reference number either.
 
 ## Why are there so many different files?
 
