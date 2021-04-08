@@ -7,8 +7,8 @@ incorporate RAR extraction functionality.
 ## Explain
 
 The only legal way to create a RAR file is with
-[WinRAR](https://www.rarlab.com/), and far too many people have already run out
-their 40-day trial period for WinRAR long ago, myself included.
+[RAR/WinRAR](https://www.rarlab.com/), and far too many people have already run
+out their 40-day trial period for WinRAR long ago, myself included.
 
 I bought a WinRAR license to use on my Windows XP retro-hobby computer so I
 could be authentic to my nostalgia without license violations or nag screens and
