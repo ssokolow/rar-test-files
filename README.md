@@ -86,7 +86,7 @@ clause...
 1. **Common Setup:**
 
    1. A couple of years ago, I constructed a standard "contents of a tiny
-      archive" test file named `testfile.txt` containing `Testing 123.\n`. This
+      archive" test file named `testfile.txt` containing `Testing 123\n`. This
       should be the only contents of the `.rar` and `.exe` archives.
    1. A couple of years ago, I used [GIMP](https://www.gimp.org/) 2.8.16 (from
       the [Kubuntu Linux](https://kubuntu.org/getkubuntu/) 16.04 LTS (amd64)
@@ -99,68 +99,34 @@ clause...
       efficiency of certain kinds of synthesized corruption testing. These
       should be the only contents of the `.cbr` files.
 
-1. **RAR5 Files Except Windows Self-Extractors:**
+1. **All RAR Files Except Windows Self-Extractors:**
 
-   1. Install RAR 5.30 beta 2 on my Linux PC using the
+   1. Follow the setup instructions I've documented at the top of `Makefile`.
+   1. Run `make`.
+
+   In basic testing, the efforts I've made in the `Makefile` to insulate the RAR
+   files from unpredictable filesystem timestamps seem to have resulted in
+   reproducible builds aside from the following caveats:
+
+   1. Since I used RAR for Linux from the `2:5.3.b2-1` version of the
       [`rar`](https://packages.ubuntu.com/xenial/rar) package in the Ubuntu
-      Linux 16.04 LTS (amd64) package repositories.
-   1. Copy `rarreg.key` to `~/.rarreg.key` to register the installation.
-   1. Run the following commands in the terminal:
+      Linux 16.04 LTS (amd64) package repositories, it may be difficult to
+      guarantee access to the exact version of RAR for Linux I used.
 
-      ```sh
-      rar a -m5 -ma5 -t testfile.rar5.rar testfile.txt
-      rar a -m5 -ma5 -t testfile.rar5.cbr testfile.{jpg,png}
-      rar a -m5 -ma5 -t -k testfile.rar5.locked.rar testfile.txt
-      rar a -m5 -ma5 -t -k testfile.rar5.locked.cbr testfile.{jpg,png}
-      rar a -m5 -ma5 -t -rr testfile.rar5.rr.rar testfile.txt
-      rar a -m5 -ma5 -t -rr testfile.rar5.rr.cbr testfile.{jpg,png}
-      rar a -m5 -ma5 -t -s testfile.rar5.solid.rar testfile.txt
-      rar a -m5 -ma5 -t -s testfile.rar5.solid.cbr testfile.{jpg,png}
-      rar a -m5 -ma5 -t -sfx testfile.rar5.linux_sfx.bin testfile.txt
-      ```
+      I may switch to a RARLab build later to make that easier for others to
+      reproduce.
 
-1. **RAR3 Files Except Windows Self-Extractors:**
+   2. I don't expect others to be able to get bit-exact reproductions of the
+      RAR3 authenticity verification test files (that's the point of
+      authenticity verification), but even I can't currently get them.
 
-   1. Download [RAR 3.93 for DOS](http://www.rarlab.com/rar/rarx393.exe) from
-      rarlab.com and upload it to [VirusTotal](https://virustotal.com/) to
-      double-check that it's clean.
-
-   1. Install [DOSBox](https://www.dosbox.com/) (`0.74-4.2+deb9u2build0.16.04.1`
-      from the `dosbox` package in the aforementioned package repository) on my
-      Linux PC.
-   1. Run the RAR 3.93 installer inside DOSBox and then copy `rarreg.key` into
-      `C:\RAR` (assuming you ran `rarx393.exe` in the root of the virtual drive)
-   1. Copy the test data into `C:\RAR`
-   1. Run the same commands as in the RAR5 version, but with the following
-      changes:
-
-      1. Use `rar32` instead of `rar` for the command name
-      1. Omit the `-ma5` flag
-      1. Use `testfile.rar` as the output filename to deal with MS-DOS 8.3
-         restrictions.
-      1. Manually write `testfile.jpg testfile.png` instead of using
-         `{jpg,png}`.
-      1. Include a variant with `-av` for the authenticity verification feature
-         removed in modern RAR versions.
-
-      ...alternating with these commands in a terminal outside DOSBox to produce
-      the final filenames:
-
-      ```sh
-      mv -i ~/.dosbox/RAR/TESTFILE.RAR testfile.rar3.rar
-      mv -i ~/.dosbox/RAR/TESTFILE.RAR testfile.rar3.av.rar
-      mv -i ~/.dosbox/RAR/TESTFILE.RAR testfile.rar3.locked.rar
-      mv -i ~/.dosbox/RAR/TESTFILE.RAR testfile.rar3.rr.rar
-      mv -i ~/.dosbox/RAR/TESTFILE.RAR testfile.rar3.solid.rar
-      mv -i ~/.dosbox/RAR/TESTFILE.EXE testfile.rar3.dos_sfx.exe
-      mv -i ~/.dosbox/RAR/TESTFILE.RAR testfile.rar3.cbr
-      mv -i ~/.dosbox/RAR/TESTFILE.RAR testfile.rar3.av.cbr
-      mv -i ~/.dosbox/RAR/TESTFILE.RAR testfile.rar3.locked.cbr
-      mv -i ~/.dosbox/RAR/TESTFILE.RAR testfile.rar3.rr.cbr
-      mv -i ~/.dosbox/RAR/TESTFILE.RAR testfile.rar3.solid.cbr
-      ```
+      I'm assuming it's still depending on the wall clock time... either to bake
+      it into the signature directly or to seed a PRNG.
 
 1. **RAR5 Windows Self-Extractors:**
+
+   Until I get around to using Wine to incorporate these into `Makefile`, here's
+   how I made the ones in the `prebuilt` folder:
 
    1. Download the
       [WinRAR x86 (32 bit) 6.01 beta 1](https://www.rarlab.com/rar/wrar601b1.exe)
@@ -184,6 +150,9 @@ clause...
       stubs.
 
 1. **RAR3 Windows Self-Extractors:**
+
+   Until I get around to using Wine to incorporate these into `Makefile`, here's
+   how I made the ones in the `prebuilt` folder:
 
    1. Download [WinRAR 3.93](http://www.rarlab.com/rar/wrar393.exe) from
       rarlab.com and upload it to [VirusTotal](https://virustotal.com/) to
