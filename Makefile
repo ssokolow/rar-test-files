@@ -6,6 +6,10 @@
 # 3. Unpack http://www.rarlab.com/rar/rarx393.exe to ./dosbox/rar
 #    (If you ran it inside DOSBox, rename the `RAR` folder to `rar`)
 # 4. Copy your RAR/WinRAR registration key to ./dosbox/RAR/rarreg.key
+# 5. Install https://www.rarlab.com/rar/wrar601b1.exe into the default Wine
+#    prefix at C:\Program Files (x86)\WinRAR\Rar.exe
+# 6. Open your rarkey.rar in WinRAR or copy rarreg.key to the WinRAR
+#    installation directory.
 #
 # WARNING: Parallel make is not currently supported because the DOSBox
 #          invocations all share the same virtual drive and temporary 8.3
@@ -16,9 +20,13 @@ DOSBOX := dosbox
 DOS_RAR := C:\RAR\RAR32.EXE
 DOS_ROOT := ./dosbox
 DOS_RAR_DIR := $(DOS_ROOT)/rar
+WINE_ROOT := $(HOME)/.wine/drive_c
+WINE_RAR5_DIR := $(WINE_ROOT)/Program Files (x86)/WinRAR
+WINE_RAR5 := $(WINE_RAR5_DIR)/Rar.exe
 
-LIN_RARKEY := ~/.rarreg.key
+LIN_RARKEY := $(HOME)/.rarreg.key
 DOS_RARKEY := $(DOS_RAR_DIR)/rarreg.key
+WINE_RAR5KEY := $(WINE_RAR5_DIR)/rarreg.key
 RAR_OPTS := -m5 -ep1 -t -ai -cl -tl
 
 BUILD_DIR := build
@@ -55,13 +63,16 @@ local_artifacts = \
 # rebuildable using Wine in a future revision of this Makefile
 prebuilt_artifacts = \
   $(BUILD_DIR)/testfile.rar3.wincon.sfx.exe \
-  $(BUILD_DIR)/testfile.rar3.wingui.sfx.exe \
+  $(BUILD_DIR)/testfile.rar3.wingui.sfx.exe
+
+wine_artifacts = \
   $(BUILD_DIR)/testfile.rar5.wincon.sfx.exe \
   $(BUILD_DIR)/testfile.rar5.wingui.sfx.exe
 
+
 .PHONY: all clean
 
-all: all-pre $(local_artifacts) $(dos_artifacts) $(prebuilt_artifacts)
+all: all-pre $(local_artifacts) $(dos_artifacts) $(wine_artifacts) $(prebuilt_artifacts)
 
 all-pre: $(BUILD_DIR)
 	@# Improve reproducibility of builds (paired with -tl in RAR_OPTS)
@@ -80,18 +91,24 @@ extra_args =
 dos_outname = OUTFILE.RAR
 
 define make-rar =
-[ -f $(LIN_RARKEY) ]
+[ -f "$(LIN_RARKEY)" ]
 rm -f $@
 $(RAR) a -ma5 $(RAR_OPTS) $(extra_args) $@ $^
 endef
 
 define make-dosbox-rar =
-[ -f $(DOS_RARKEY) ]
+[ -f "$(DOS_RARKEY)" ]
 rm -f $@
 cp -p $^ $(DOS_RAR_DIR)
 dosbox -conf $(DOS_ROOT)/dosbox-0.74.conf -c "$(DOS_RAR) a $(RAR_OPTS) $(extra_args) $(dos_outname) $(notdir $^)" -c "exit"
 mv $(DOS_RAR_DIR)/$(dos_outname) $@
 rm $(addprefix $(DOS_RAR_DIR)/,$(notdir $^))
+endef
+
+define make-wine-rar5 =
+[ -f "$(WINE_RAR5KEY)" ]
+rm -f $@
+wine "$(WINE_RAR5)" a -ma5 -sfx$(sfx_stub) $(RAR_OPTS) $(extra_args) $@ $^
 endef
 
 # --== DOSBox Artifacts ==--
@@ -182,3 +199,13 @@ $(BUILD_DIR)/testfile.rar5.linux_sfx.bin: $(SRC_DIR)/testfile.txt
 
 $(prebuilt_artifacts): $(addprefix $(PREBUILT_DIR)/,$(notdir $(prebuilt_artifacts)))
 	cp $^ $(BUILD_DIR)
+
+# --== Wine Artifacts ==--
+
+$(BUILD_DIR)/testfile.rar5.wincon.sfx.exe: sfx_stub=WinCon.SFX
+$(BUILD_DIR)/testfile.rar5.wincon.sfx.exe: $(SRC_DIR)/testfile.txt
+	$(make-wine-rar5)
+
+$(BUILD_DIR)/testfile.rar5.wingui.sfx.exe: sfx_stub=Default.SFX
+$(BUILD_DIR)/testfile.rar5.wingui.sfx.exe: $(SRC_DIR)/testfile.txt
+	$(make-wine-rar5)

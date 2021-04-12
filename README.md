@@ -4,6 +4,8 @@ This repository contains a collection of minimal, legally redistributable `.rar`
 and `.cbr` test files suitable for inclusion in test suites for programs that
 incorporate RAR extraction functionality.
 
+**TL;DR:** If you just want the test files, they're in the `build` folder.
+
 ## Explain
 
 The only legal way to create a RAR file is with
@@ -21,13 +23,23 @@ fixtures for the integration tests in a project I'm working on which invokes
 Since I had so much trouble finding test files I could feel confident in the
 legality of, I decided to share mine for others to use.
 
+...and since I'm licensed as a home user and doing this as a non-profit hobby
+project, the [RAR/WinRAR EULA](https://www.win-rar.com/winrarlicense.html)
+allows me to install a single license on multiple machines, so I don't need to
+do an install/uninstall dance to use it both for this project and to improve the
+authenticity of my nostalgia PC:
+
+> Home users may use their single computer usage license on all computers and
+> mobile devices (USB drive, external hard drive, etc.) which are property of
+> the license owner.
+
 **NOTE:** If you can provide simple instructions for how I can build some
 [`.spc`](https://wiki.superfamicom.org/spc-and-rsn-file-format) files that are
 legally in the clear, I'll add some `.rsn` files to this repository. My
 understanding is that they embed music playback code from the ROM they were
 ripped from.
 
-## How can I be sure you have a WinRAR license?
+## "How can I be sure you have a WinRAR license?"
 
 These were made using the digital delivery copy of the license but I also paid
 for the "WinRAR Physical Delivery on CD" option as extra proof of purchase. When
@@ -39,7 +51,7 @@ and, according to a letter Clint Basinger of Lazy Game Reviews
 [received](https://www.youtube.com/watch?v=FoclTVcjkXE) when he bought a WinRAR
 license, I shouldn't share the order reference number either.
 
-## Why are there so many different files?
+## "Why are there so many different files?"
 
 The project I made them for is intended as a frontend for detecting corruption
 in as wide a range of files as possible.
@@ -70,128 +82,73 @@ in as wide a range of files as possible.
   [MZ](https://en.wikipedia.org/wiki/DOS_MZ_executable)-format executable
   appears to be structurally valid.)
 
-## How were these files made?
+## Reproducible and Custom Builds
 
-As I bought a non-business WinRAR license, this is a hobby project, developed
-under my own name, on a home computer, and the
-[WinRAR EULA](https://www.win-rar.com/winrarlicense.html) contains this
-clause...
+If you have purchased a RAR/WinRAR license, you can easily run your own builds.
 
-> Home users may use their single computer usage license on all computers and
-> mobile devices (USB drive, external hard drive, etc.) which are property of
-> the license owner.
+With two exceptions, all test files are generated as should-be-reproducible
+builds using the `Makefile` in this repository.
 
-...I generated the files as follows:
+1. The WinRAR 3.x self-extractors are currently just copied from `prebuilt`.
+2. The RAR3 files with authenticity verification currently change with each
+   build... probably because the wall clock time is getting incorporated into
+   the signature generation either directly or to seed a pseudo-random number
+   generator.
 
-1. **Common Setup:**
+To rebuild the test files:
 
-   1. A couple of years ago, I constructed a standard "contents of a tiny
-      archive" test file named `testfile.txt` containing `Testing 123\n`. This
-      should be the only contents of the `.rar` and `.exe` archives.
-   1. A couple of years ago, I used [GIMP](https://www.gimp.org/) 2.8.16 (from
-      the [Kubuntu Linux](https://kubuntu.org/getkubuntu/) 16.04 LTS (amd64)
-      package repository) to craft standard `testfile.png` and `testfile.jpg`
-      files consisting of a 2px by 2px checkerboard and then recompressed them
-      using [`pngcrush`](https://pmt.sourceforge.io/pngcrush/),
-      [`optipng`](http://optipng.sourceforge.net/),
-      [AdvanceCOMP](https://en.wikipedia.org/wiki/AdvanceCOMP), and
-      [`jpegoptim`](https://github.com/tjko/jpegoptim) to maximize the
-      efficiency of certain kinds of synthesized corruption testing. These
-      should be the only contents of the `.cbr` files.
+1. Follow the setup instructions in the comment at the top of `Makefile`
+2. Type `make clean` to clear out the prebuilt archives
+3. Make any edits you'd like to the contents of `sources` or the lists of files
+   inside `Makefile`.
+4. Type `make`
 
-1. **All RAR Files Except Windows Self-Extractors:**
+If you'd like to follow my methodology for customizing the test image files in
+`sources`, use the following process to optimize the compression and strip the
+metadata:
 
-   1. Follow the setup instructions I've documented at the top of `Makefile`.
-   1. Run `make`.
+```sh
+pngcrush -ow -rem gAMA -rem alla -rem cHRM -rem iCCP -rem sRGB -rem time testfile.png
+optipng -clobber testfile.png
+advpng -z4 testfile.png
+jpegoptim -s testfile.jpg
+```
 
-   In basic testing, the efforts I've made in the `Makefile` to insulate the RAR
-   files from unpredictable filesystem timestamps seem to have resulted in
-   reproducible builds aside from the following caveats:
+### "How were the WinRAR 3.x self-extractors made?"
 
-   1. Since I used RAR for Linux from the `2:5.3.b2-1` version of the
-      [`rar`](https://packages.ubuntu.com/xenial/rar) package in the Ubuntu
-      Linux 16.04 LTS (amd64) package repositories, it may be difficult to
-      guarantee access to the exact version of RAR for Linux I used.
+Until I get around to using Wine to incorporate these into `Makefile`, here's
+how I made the ones in the `prebuilt` folder:
 
-      I may switch to a RARLab build later to make that easier for others to
-      reproduce.
+1.  Download [WinRAR 3.93](http://www.rarlab.com/rar/wrar393.exe) from
+    rarlab.com and upload it to [VirusTotal](https://virustotal.com/) to verify
+    that it's clean.
+1.  Copy the installer and the original `rarkey.rar` file I received, containing
+    `rarreg.key`, to a USB flash drive.
+1.  Power on my Windows XP retro-hobby PC and start up
+    [FreeSSHd](http://www.freesshd.com/).
+1.  Power on my Windows 98 retro-hobby PC (a 133MHz AST Adventure! 210 with no
+    USB ports that I upgraded to Windows 98 SE using my childhood retail-boxed
+    copy of Windows 98 SE Upgrade).
+1.  Use
+    [WinSCP 4.4.0](https://sourceforge.net/projects/winscp/files/WinSCP/4.4/) on
+    the Windows 98 side to copy across WinRAR 3.93 and `rarkey.rar` using the
+    airgapped LAN I set up between my retro-hobby PCs.
+1.  Install and register WinRAR 3.93.
+1.  Generate `testfile.rar3.wingui.sfx.exe` and `testfile.rar3.wincon.sfx.exe`.
+1.  Use WinSCP to move the RAR3 files back to the Windows XP machine.
+1.  Move the RAR3 files onto the USB flash drive.
+1.  Plug the flash drive back into my Linux PC.
+1.  Commit everything to the local copy of the repository _before_ running any
+    checks so there is no unprotected window between checking for corruption or
+    virus infection and generating the hashes.
+1.  Run
+    `for X in *.rar *.cbr *.exe *.bin; do unrar t -inul "$X" || echo "ERROR: $X"; done`
+    to check for corruption.
+1.  Upload the self-extractors to [VirusTotal](https://virustotal.com/) to make
+    sure there are no viruses lurking somewhere in my setup that infected the
+    self-extractor stubs.
 
-   2. I don't expect others to be able to get bit-exact reproductions of the
-      RAR3 authenticity verification test files (that's the point of
-      authenticity verification), but even I can't currently get them.
-
-      I'm assuming it's still depending on the wall clock time... either to bake
-      it into the signature directly or to seed a PRNG.
-
-1. **RAR5 Windows Self-Extractors:**
-
-   Until I get around to using Wine to incorporate these into `Makefile`, here's
-   how I made the ones in the `prebuilt` folder:
-
-   1. Download the
-      [WinRAR x86 (32 bit) 6.01 beta 1](https://www.rarlab.com/rar/wrar601b1.exe)
-      installer from rarlab.com and upload it to
-      [VirusTotal](https://virustotal.com/) to double-check that it's clean.
-   1. Copy the installer and the original `rarkey.rar` file I received,
-      containing `rarreg.key`, to a USB flash drive.
-   1. Power on my Windows XP retro-hobby PC (a Lenovo 3000 J Series that's still
-      running its original factory Windows XP Professional install and is kept
-      disconnected from the Internet) and plug in the USB flash drive.
-   1. Install and register WinRAR 6.01 beta 1.
-   1. Generate `testfile.rar5.wingui.sfx.exe` and
-      `testfile.rar5.wincon.sfx.exe`.
-   1. Move those files to the USB flash drive.
-   1. Plug the flash drive back into my Linux PC.
-   1. Commit the self-extractors to the local copy of the repository _before_
-      checking them on VirusTotal to make it significantly more involved for
-      modifications to sneak in _after_ the virus scan.
-   1. Upload the resulting self-extractors to VirusTotal to make sure there are
-      no viruses lurking somewhere in my setup that infected the self-extractor
-      stubs.
-
-1. **RAR3 Windows Self-Extractors:**
-
-   Until I get around to using Wine to incorporate these into `Makefile`, here's
-   how I made the ones in the `prebuilt` folder:
-
-   1. Download [WinRAR 3.93](http://www.rarlab.com/rar/wrar393.exe) from
-      rarlab.com and upload it to [VirusTotal](https://virustotal.com/) to
-      verify that it's clean.
-   1. Copy the installer and the original `rarkey.rar` file I received,
-      containing `rarreg.key`, to a USB flash drive.
-   1. Power on my Windows XP retro-hobby PC and start up
-      [FreeSSHd](http://www.freesshd.com/).
-   1. Power on my Windows 98 retro-hobby PC (a 133MHz AST Adventure! 210 with no
-      USB ports that I upgraded to Windows 98 SE using my childhood retail-boxed
-      copy of Windows 98 SE Upgrade).
-   1. Use
-      [WinSCP 4.4.0](https://sourceforge.net/projects/winscp/files/WinSCP/4.4/)
-      on the Windows 98 side to copy across WinRAR 3.93 and `rarkey.rar` using
-      the airgapped LAN I set up between my retro-hobby PCs.
-   1. Install and register WinRAR 3.93.
-   1. Generate `testfile.rar3.wingui.sfx.exe` and
-      `testfile.rar3.wincon.sfx.exe`.
-   1. Use WinSCP to move the RAR3 files back to the Windows XP machine.
-   1. Move the RAR3 files onto the USB flash drive.
-   1. Plug the flash drive back into my Linux PC.
-
-1. **Post-Generation Tests:**
-   1. Commit everything to the local copy of the repository _before_ running any
-      checks so there is no unprotected window between checking for corruption
-      or virus infection and generating the hashes.
-   1. Run
-      `for X in *.rar *.cbr *.exe *.bin; do unrar t -inul "$X" || echo "ERROR: $X"; done`
-      to check for corruption.
-   1. Upload all the self-extractors to [VirusTotal](https://virustotal.com/) to
-      make sure there are no viruses lurking somewhere in my setup that infected
-      the self-extractor stubs.
-
-Had I been doing this under the aegis of a business, I'd have done the same
-thing but with a few extra "uninstall RAR/WinRAR from machine X before
-installing on machine Y" lines to be sure I'm satisfying the letter of the
-business license terms.
-
-## My virus scanner reports malware in these files
+## "My virus scanner reports malware in these files"
 
 Check them on [VirusTotal](https://virustotal.com/). I'd be _very_ surprised if
 it wasn't a false positive.
@@ -201,21 +158,21 @@ detection false positives:
 
 - `testfile.rar3.wincon.sfx.exe` is
   [reported](https://www.virustotal.com/gui/file/25c5e192a0575075b683bb4a185627771a8442fb550de9a606f388086f6872b6/detection)
-  as "Malicious" by 1 scanner and as a heuristically-detected trojan by one
+  as "Malicious" by one scanner and as a heuristically-detected trojan by one
   other out of 67 scanners VirusTotal submitted it to.
 - `testfile.rar3.wingui.sfx.exe` is
   [reported](https://www.virustotal.com/gui/file/79c7bfd43b75ecd1d582f2d0c0031334b72a5c41e1a1e45f2deeb16aeaac6dd2/detection)
-  as "Malicious" by 1 out of the 67 scanners VirusTotal submitted it to.
+  as "Malicious" by one out of the 67 scanners VirusTotal submitted it to.
 - `testfile.rar5.wingui.sfx.exe` is
-  [reported](https://www.virustotal.com/gui/file/9fd0df3589c699c6ca4a0a5f79cd54a337c38da80278972ce4b1c119eaaba25b/detection)
-  as malicious by 6 of the 67 scanners VirusTotal submitted it to, with four of
+  [reported](https://www.virustotal.com/gui/file/3a429b89faf14a94d699415d316e9661fea6b910bfc3a32c3a8c534bab327794/detection)
+  as malicious by 5 of the 64 scanners VirusTotal submitted it to, with three of
   them listing virus/malware IDs that explicitly make it clear it was a
   heuristic match and the other two just saying "Malicious".
 
-To be sure, I redid the `testfile.rar5.wingui.sfx.exe` build by verifying the
-WinRAR x86 (32 bit) 6.01 beta 1 installer was clean, installing it into a fresh
-Wine prefix (`wine-1.7.55` from the Ubuntu 16.04 LTS (amd64) repositories), and
-got identical false positives from VirusTotal.
+To be sure, I verified I had clean WinRAR installers and generated the same
+`testfile.rar5.wingui.sfx.exe` test file on two different machines (one genuine
+Windows XP and one a fresh Wine profile on Linux). VirusTotal gave identical
+results.
 
 This pattern of less than 10% of VirusTotal's backends triggering and doing it
 based on heuristic detection is a common form of false positive... especially
@@ -234,9 +191,18 @@ vulnerability.
 
 ## Future Plans
 
-- Test files for
+- Migrate the RAR3 Windows self-extractors to Wine-based `Makefile` builds to
+  eliminate the last remaining prebuilt files.
+- Add test files for
   [multi-volume RAR archives](https://documentation.help/WinRAR/HELPArcVolumes.htm)
-  with and without `-vn`
+  with and without the `-vn` naming scheme
+- Switch to a pinned build of RAR for Linux from RARLab to make the process more
+  reliably reproducible.
+- Investigate what's preventing the authenticity verification build from being
+  fully deterministic and, if necessary, use `LD_PRELOAD` to mock the system
+  call that's being used to request the system time or random numbers and
+  replace it with canned responses from one known-good run.
+- Use some VMs to further test my efforts to make builds reproducible.
 
 ## License
 
