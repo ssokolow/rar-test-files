@@ -124,7 +124,8 @@ how I made the ones in the `prebuilt` folder:
     that it's clean.
 1.  Copy the installer and the original `rarkey.rar` file I received, containing
     `rarreg.key`, to a USB flash drive.
-1.  Power on my Windows XP retro-hobby PC and start up
+1.  Power on my Windows XP retro-hobby PC (a Lenovo 3000 J Series running its
+    original factory install of Windows XP) and start up
     [FreeSSHd](http://www.freesshd.com/).
 1.  Power on my Windows 98 retro-hobby PC (a 133MHz AST Adventure! 210 with no
     USB ports that I upgraded to Windows 98 SE using my childhood retail-boxed
@@ -133,7 +134,8 @@ how I made the ones in the `prebuilt` folder:
     [WinSCP 4.4.0](https://sourceforge.net/projects/winscp/files/WinSCP/4.4/) on
     the Windows 98 side to copy across WinRAR 3.93 and `rarkey.rar` using the
     airgapped LAN I set up between my retro-hobby PCs.
-1.  Install and register WinRAR 3.93.
+1.  Install and register WinRAR 3.93 on the Windows 98 machine (to leave the
+    Windows XP machine free for a newer version).
 1.  Generate `testfile.rar3.wingui.sfx.exe` and `testfile.rar3.wincon.sfx.exe`.
 1.  Use WinSCP to move the RAR3 files back to the Windows XP machine.
 1.  Move the RAR3 files onto the USB flash drive.
