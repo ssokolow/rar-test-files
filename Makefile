@@ -72,7 +72,7 @@ wine_artifacts = \
 
 .PHONY: all clean
 
-all: all-pre $(local_artifacts) $(dos_artifacts) $(wine_artifacts) $(prebuilt_artifacts)
+all: all-pre $(prebuilt_artifacts) $(local_artifacts) $(wine_artifacts) $(dos_artifacts)
 
 all-pre: $(BUILD_DIR)
 	@# Improve reproducibility of builds (paired with -tl in RAR_OPTS)
