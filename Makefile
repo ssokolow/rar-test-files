@@ -8,8 +8,9 @@
 # 4. Copy your RAR/WinRAR registration key to ./dosbox/RAR/rarreg.key
 # 5. Install https://www.rarlab.com/rar/wrar601b1.exe into the default Wine
 #    prefix at C:\Program Files (x86)\WinRAR\Rar.exe
-# 6. Open your rarkey.rar in WinRAR or copy rarreg.key to the WinRAR
-#    installation directory.
+# 6. Install http://www.rarlab.com/rar/wrar393.exe into the default Wine prefix
+#    at C:\Program Files (x86)\WinRAR393\Rar.exe
+# 6. Copy rarreg.key into both WinRAR installation directories.
 #
 # WARNING: Parallel make is not currently supported because the DOSBox
 #          invocations all share the same virtual drive and temporary 8.3
@@ -21,11 +22,14 @@ DOS_RAR := C:\RAR\RAR32.EXE
 DOS_ROOT := ./dosbox
 DOS_RAR_DIR := $(DOS_ROOT)/rar
 WINE_ROOT := $(HOME)/.wine/drive_c
+WINE_RAR3_DIR := $(WINE_ROOT)/Program Files (x86)/WinRAR393
+WINE_RAR3 := $(WINE_RAR3_DIR)/Rar.exe
 WINE_RAR5_DIR := $(WINE_ROOT)/Program Files (x86)/WinRAR
 WINE_RAR5 := $(WINE_RAR5_DIR)/Rar.exe
 
 LIN_RARKEY := $(HOME)/.rarreg.key
 DOS_RARKEY := $(DOS_RAR_DIR)/rarreg.key
+WINE_RAR3KEY := $(WINE_RAR3_DIR)/rarreg.key
 WINE_RAR5KEY := $(WINE_RAR5_DIR)/rarreg.key
 RAR_OPTS := -m5 -ep1 -t -ai -cl -tl
 
@@ -59,13 +63,10 @@ local_artifacts = \
   $(BUILD_DIR)/testfile.rar5.solid.rar \
   $(BUILD_DIR)/testfile.rar5.linux_sfx.bin
 
-# Prebuilt artifacts which cannot currently be rebuilt but which may be
-# rebuildable using Wine in a future revision of this Makefile
-prebuilt_artifacts = \
-  $(BUILD_DIR)/testfile.rar3.wincon.sfx.exe \
-  $(BUILD_DIR)/testfile.rar3.wingui.sfx.exe
-
+# Artifacts which are built using WinRAR 3.93 and WinRAR 6.01 beta 1 in Wine
 wine_artifacts = \
+  $(BUILD_DIR)/testfile.rar3.wincon.sfx.exe \
+  $(BUILD_DIR)/testfile.rar3.wingui.sfx.exe \
   $(BUILD_DIR)/testfile.rar5.wincon.sfx.exe \
   $(BUILD_DIR)/testfile.rar5.wingui.sfx.exe
 
@@ -103,6 +104,12 @@ cp -p $^ $(DOS_RAR_DIR)
 dosbox -conf $(DOS_ROOT)/dosbox-0.74.conf -c "$(DOS_RAR) a $(RAR_OPTS) $(extra_args) $(dos_outname) $(notdir $^)" -c "exit"
 mv $(DOS_RAR_DIR)/$(dos_outname) $@
 rm $(addprefix $(DOS_RAR_DIR)/,$(notdir $^))
+endef
+
+define make-wine-rar3 =
+[ -f "$(WINE_RAR3KEY)" ]
+rm -f $@
+wine "$(WINE_RAR3)" a -sfx$(sfx_stub) $(RAR_OPTS) $(extra_args) $@ $^
 endef
 
 define make-wine-rar5 =
@@ -193,14 +200,15 @@ $(BUILD_DIR)/testfile.rar5.linux_sfx.bin: $(SRC_DIR)/testfile.txt
 	$(make-rar)
 	mv $@.sfx $@
 
-# --== Pre-built Artifacts ==--
-
-# TODO: Experiment with installing current and 3.x WinRAR in Wine
-
-$(prebuilt_artifacts): $(addprefix $(PREBUILT_DIR)/,$(notdir $(prebuilt_artifacts)))
-	cp $^ $(BUILD_DIR)
-
 # --== Wine Artifacts ==--
+
+$(BUILD_DIR)/testfile.rar3.wincon.sfx.exe: sfx_stub=WinCon.SFX
+$(BUILD_DIR)/testfile.rar3.wincon.sfx.exe: $(SRC_DIR)/testfile.txt
+	$(make-wine-rar3)
+
+$(BUILD_DIR)/testfile.rar3.wingui.sfx.exe: sfx_stub=Default.SFX
+$(BUILD_DIR)/testfile.rar3.wingui.sfx.exe: $(SRC_DIR)/testfile.txt
+	$(make-wine-rar3)
 
 $(BUILD_DIR)/testfile.rar5.wincon.sfx.exe: sfx_stub=WinCon.SFX
 $(BUILD_DIR)/testfile.rar5.wincon.sfx.exe: $(SRC_DIR)/testfile.txt

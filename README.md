@@ -86,14 +86,13 @@ in as wide a range of files as possible.
 
 If you have purchased a RAR/WinRAR license, you can easily run your own builds.
 
-With two exceptions, all test files are generated as should-be-reproducible
+With one exception, all test files are generated as should-be-reproducible
 builds using the `Makefile` in this repository.
 
-1. The WinRAR 3.x self-extractors are currently just copied from `prebuilt`.
-2. The RAR3 files with authenticity verification currently change with each
-   build... probably because the wall clock time is getting incorporated into
-   the signature generation either directly or to seed a pseudo-random number
-   generator.
+That exception is that the RAR3 files with authenticity verification currently
+change with each build... probably because the wall clock time is getting
+incorporated into the signature generation either directly or to seed a
+pseudo-random number generator.
 
 To rebuild the test files:
 
@@ -114,42 +113,6 @@ advpng -z4 testfile.png
 jpegoptim -s testfile.jpg
 ```
 
-### "How were the WinRAR 3.x self-extractors made?"
-
-Until I get around to using Wine to incorporate these into `Makefile`, here's
-how I made the ones in the `prebuilt` folder:
-
-1.  Download [WinRAR 3.93](http://www.rarlab.com/rar/wrar393.exe) from
-    rarlab.com and upload it to [VirusTotal](https://virustotal.com/) to verify
-    that it's clean.
-1.  Copy the installer and the original `rarkey.rar` file I received, containing
-    `rarreg.key`, to a USB flash drive.
-1.  Power on my Windows XP retro-hobby PC (a Lenovo 3000 J Series running its
-    original factory install of Windows XP) and start up
-    [FreeSSHd](http://www.freesshd.com/).
-1.  Power on my Windows 98 retro-hobby PC (a 133MHz AST Adventure! 210 with no
-    USB ports that I upgraded to Windows 98 SE using my childhood retail-boxed
-    copy of Windows 98 SE Upgrade).
-1.  Use
-    [WinSCP 4.4.0](https://sourceforge.net/projects/winscp/files/WinSCP/4.4/) on
-    the Windows 98 side to copy across WinRAR 3.93 and `rarkey.rar` using the
-    airgapped LAN I set up between my retro-hobby PCs.
-1.  Install and register WinRAR 3.93 on the Windows 98 machine (to leave the
-    Windows XP machine free for a newer version).
-1.  Generate `testfile.rar3.wingui.sfx.exe` and `testfile.rar3.wincon.sfx.exe`.
-1.  Use WinSCP to move the RAR3 files back to the Windows XP machine.
-1.  Move the RAR3 files onto the USB flash drive.
-1.  Plug the flash drive back into my Linux PC.
-1.  Commit everything to the local copy of the repository _before_ running any
-    checks so there is no unprotected window between checking for corruption or
-    virus infection and generating the hashes.
-1.  Run
-    `for X in *.rar *.cbr *.exe *.bin; do unrar t -inul "$X" || echo "ERROR: $X"; done`
-    to check for corruption.
-1.  Upload the self-extractors to [VirusTotal](https://virustotal.com/) to make
-    sure there are no viruses lurking somewhere in my setup that infected the
-    self-extractor stubs.
-
 ## "My virus scanner reports malware in these files"
 
 Check them on [VirusTotal](https://virustotal.com/). I'd be _very_ surprised if
@@ -159,12 +122,13 @@ As of the time these files were created, the following files reported heuristic
 detection false positives:
 
 - `testfile.rar3.wincon.sfx.exe` is
-  [reported](https://www.virustotal.com/gui/file/25c5e192a0575075b683bb4a185627771a8442fb550de9a606f388086f6872b6/detection)
-  as "Malicious" by one scanner and as a heuristically-detected trojan by one
-  other out of 67 scanners VirusTotal submitted it to.
+  [reported](https://www.virustotal.com/gui/file/53828989405e0726d74a7a1dc8ae37261bdfab12da367b7371847cbe13594069/detection)
+  as a heuristically-detected trojan by one of 67 scanners VirusTotal submitted
+  it to.
 - `testfile.rar3.wingui.sfx.exe` is
-  [reported](https://www.virustotal.com/gui/file/79c7bfd43b75ecd1d582f2d0c0031334b72a5c41e1a1e45f2deeb16aeaac6dd2/detection)
-  as "Malicious" by one out of the 67 scanners VirusTotal submitted it to.
+  [reported](https://www.virustotal.com/gui/file/d75ebd8f08c4eca988120ec53e0d41ddf04fce58fb06de82dccc788cc602b5f6/detection)
+  as "Malicious" by one out of the 67 scanners VirusTotal submitted it to and as
+  a heuristically detected trojan by another of them.
 - `testfile.rar5.wingui.sfx.exe` is
   [reported](https://www.virustotal.com/gui/file/3a429b89faf14a94d699415d316e9661fea6b910bfc3a32c3a8c534bab327794/detection)
   as malicious by 5 of the 64 scanners VirusTotal submitted it to, with three of
@@ -173,16 +137,16 @@ detection false positives:
 
 To be sure, I verified I had clean WinRAR installers and generated the same
 `testfile.rar5.wingui.sfx.exe` test file on two different machines (one genuine
-Windows XP and one a fresh Wine profile on Linux). VirusTotal gave identical
-results.
+Windows XP setup on my airgapped retro-hobby PC and one fresh Wine profile on
+Linux). VirusTotal gave identical results.
 
 This pattern of less than 10% of VirusTotal's backends triggering and doing it
 based on heuristic detection is a common form of false positive... especially
 for self-extractors because heuristics tend to see compressed stuff inside an
-EXE as suspicious. I've also observed it for things which are provably safe,
-like an official install package for building
-[NSIS](http://nsis.sourceforge.net/) installers... and NSIS is used by companies
-like Amazon, Dropbox, Google, Ubisoft, and McAfee.
+EXE as suspicious. I've also observed it for things which are proven safe, like
+an official install package for building [NSIS](http://nsis.sourceforge.net/)
+installers... and NSIS is used by companies like Amazon, Dropbox, Google,
+Ubisoft, and McAfee.
 
 Also bear in mind that some of the scanners on VirusTotal will report failure
 for reasons completely unrelated to malicious code. For example, installers for
@@ -193,13 +157,11 @@ vulnerability.
 
 ## Future Plans
 
-- Migrate the RAR3 Windows self-extractors to Wine-based `Makefile` builds to
-  eliminate the last remaining prebuilt files.
+- Switch to a pinned build of RAR for Linux from RARLab to make the process more
+  reliably reproducible.
 - Add test files for
   [multi-volume RAR archives](https://documentation.help/WinRAR/HELPArcVolumes.htm)
   with and without the `-vn` naming scheme
-- Switch to a pinned build of RAR for Linux from RARLab to make the process more
-  reliably reproducible.
 - Investigate what's preventing the authenticity verification build from being
   fully deterministic and, if necessary, use `LD_PRELOAD` to mock the system
   call that's being used to request the system time or random numbers and
