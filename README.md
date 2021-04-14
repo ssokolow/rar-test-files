@@ -51,6 +51,11 @@ and, according to a letter Clint Basinger of Lazy Game Reviews
 [received](https://www.youtube.com/watch?v=FoclTVcjkXE) when he bought a WinRAR
 license, I shouldn't share the order reference number either.
 
+Since it might take some time for the disc to reach me, what with COVID and all,
+I've included a screenshot of my order confirmation e-mail as
+`interim_purchase_evidence.png` as a stop-gap solution (with the order number
+redacted for the aforementioned reason).
+
 ## "Why are there so many different files?"
 
 The project I made them for is intended as a frontend for detecting corruption
@@ -167,6 +172,10 @@ vulnerability.
   call that's being used to request the system time or random numbers and
   replace it with canned responses from one known-good run.
 - Use some VMs to further test my efforts to make builds reproducible.
+- Decide whether to move all the stuff currently done in DOSBox except the DOS
+  self-extractor to WinRAR 3.93 in Wine as an easy way to enable parallel make
+  or whether to keep at least some of them because it allows there to be a test
+  example for `.rar` files that report `os: MS-DOS` in `file`.
 
 ## License
 
