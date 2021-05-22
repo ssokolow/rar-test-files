@@ -41,20 +41,7 @@ ripped from.
 
 ## "How can I be sure you have a WinRAR license?"
 
-These were made using the digital delivery copy of the license but I also paid
-for the "WinRAR Physical Delivery on CD" option as extra proof of purchase. When
-that arrives, I'll take a confirmation photo and add it to this repository.
-
-Aside from that, cleverbridge (the fulfillment company involved) doesn't give
-any uniquely identifiable stuff I could share. I obviously can't share the key
-and, according to a letter Clint Basinger of Lazy Game Reviews
-[received](https://www.youtube.com/watch?v=FoclTVcjkXE) when he bought a WinRAR
-license, I shouldn't share the order reference number either.
-
-Since it might take some time for the disc to reach me, what with COVID and all,
-I've included a screenshot of my order confirmation e-mail as
-`interim_purchase_evidence.png` as a stop-gap solution (with the order number
-redacted for the aforementioned reason).
+![Photo of WinRAR Physical Delivery CD and mailer](purchase_evidence.png)
 
 ## "Why are there so many different files?"
 
