@@ -6,6 +6,8 @@ incorporate RAR extraction functionality.
 
 **TL;DR:** If you just want the test files, they're in the `build` folder.
 
+**See Also:** [StuffIt Test Files](https://github.com/ssokolow/stuffit-test-files)
+
 ## Explain
 
 The only legal way to create a RAR file is with
