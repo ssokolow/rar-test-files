@@ -160,7 +160,7 @@ $(BUILD_DIR)/testfile.rar3.solid.rar: $(SRC_DIR)/testfile.txt
 
 $(BUILD_DIR)/testfile.rar3.dos_sfx.exe: extra_args=-sfx
 $(BUILD_DIR)/testfile.rar3.dos_sfx.exe: dos_outname=OUTFILE.EXE
-$(BUILD_DIR)/testfile.rar3.dos_sfx.exe: $(SRC_DIR)/testfile.txt
+$(BUILD_DIR)/testfile.rar3.dos_sfx.exe: $(SRC_DIR)/testfile.txt $(SRC_DIR)/acknow.txt
 	$(make-dosbox-rar)
 
 # --== Local Artifacts ==--
@@ -195,25 +195,25 @@ $(BUILD_DIR)/testfile.rar5.solid.rar: extra_args=-s
 $(BUILD_DIR)/testfile.rar5.solid.rar: $(SRC_DIR)/testfile.txt
 	$(make-rar)
 
-$(BUILD_DIR)/testfile.rar5.linux_sfx.bin: extra_args=-sfx
-$(BUILD_DIR)/testfile.rar5.linux_sfx.bin: $(SRC_DIR)/testfile.txt
+$(BUILD_DIR)/testfile.rar5.linux_sfx.bin: extra_args=-sfx$(LIN_SFX_PATH)
+$(BUILD_DIR)/testfile.rar5.linux_sfx.bin: $(SRC_DIR)/testfile.txt $(SRC_DIR)/acknow.txt
 	$(make-rar)
 	mv $@.sfx $@
 
 # --== Wine Artifacts ==--
 
 $(BUILD_DIR)/testfile.rar3.wincon.sfx.exe: sfx_stub=WinCon.SFX
-$(BUILD_DIR)/testfile.rar3.wincon.sfx.exe: $(SRC_DIR)/testfile.txt
+$(BUILD_DIR)/testfile.rar3.wincon.sfx.exe: $(SRC_DIR)/testfile.txt $(SRC_DIR)/acknow.txt
 	$(make-wine-rar3)
 
 $(BUILD_DIR)/testfile.rar3.wingui.sfx.exe: sfx_stub=Default.SFX
-$(BUILD_DIR)/testfile.rar3.wingui.sfx.exe: $(SRC_DIR)/testfile.txt
+$(BUILD_DIR)/testfile.rar3.wingui.sfx.exe: $(SRC_DIR)/testfile.txt $(SRC_DIR)/acknow.txt
 	$(make-wine-rar3)
 
 $(BUILD_DIR)/testfile.rar5.wincon.sfx.exe: sfx_stub=WinCon.SFX
-$(BUILD_DIR)/testfile.rar5.wincon.sfx.exe: $(SRC_DIR)/testfile.txt
+$(BUILD_DIR)/testfile.rar5.wincon.sfx.exe: $(SRC_DIR)/testfile.txt $(SRC_DIR)/acknow.txt
 	$(make-wine-rar5)
 
 $(BUILD_DIR)/testfile.rar5.wingui.sfx.exe: sfx_stub=Default.SFX
-$(BUILD_DIR)/testfile.rar5.wingui.sfx.exe: $(SRC_DIR)/testfile.txt
+$(BUILD_DIR)/testfile.rar5.wingui.sfx.exe: $(SRC_DIR)/testfile.txt $(SRC_DIR)/acknow.txt
 	$(make-wine-rar5)

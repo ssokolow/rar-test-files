@@ -115,18 +115,23 @@ it wasn't a false positive.
 As of the time these files were created, the following files reported heuristic
 detection false positives:
 
-- `testfile.rar3.wincon.sfx.exe` is
+- A previous build of `testfile.rar3.wincon.sfx.exe` (missing the license
+  attribution for the AES and CRC32 code rarlab used) was
   [reported](https://www.virustotal.com/gui/file/53828989405e0726d74a7a1dc8ae37261bdfab12da367b7371847cbe13594069/detection)
-  as a heuristically-detected trojan by one of 67 scanners VirusTotal submitted
+  as a heuristically detected trojan by one of 67 scanners VirusTotal submitted
   it to.
 - `testfile.rar3.wingui.sfx.exe` is
-  [reported](https://www.virustotal.com/gui/file/d75ebd8f08c4eca988120ec53e0d41ddf04fce58fb06de82dccc788cc602b5f6/detection)
-  as "Malicious" by one out of the 67 scanners VirusTotal submitted it to and as
+  [reported](https://www.virustotal.com/gui/file/34eaad24a715383337d8a28296e89d857a50cb773a71eb7ee23bed952fed7d04)
+  as "Malicious" by one out of the 65 scanners VirusTotal submitted it to and as
   a heuristically detected trojan by another of them.
+- `testfile.rar5.wincon.sfx.exe` is
+  [reported](https://www.virustotal.com/gui/file/629e56279b6e4c12ecc5fdcd7c8ddc2c96a73ebf242338508dbbc7305c3cbfa1)
+  as a heuristically detected trojan by one of 67 scanners VirusTotal submitted
+  it to.
 - `testfile.rar5.wingui.sfx.exe` is
-  [reported](https://www.virustotal.com/gui/file/3a429b89faf14a94d699415d316e9661fea6b910bfc3a32c3a8c534bab327794/detection)
-  as malicious by 5 of the 64 scanners VirusTotal submitted it to, with three of
-  them listing virus/malware IDs that explicitly make it clear it was a
+  [reported](https://www.virustotal.com/gui/file/fea5d61a50a375c25081013878f151f4ebb3da7bd68585edd7fc8952fae0bf67)
+  as malicious by four of the 66 scanners VirusTotal submitted it to, with two
+  of them listing virus/malware IDs that explicitly make it clear it was a
   heuristic match and the other two just saying "Malicious".
 
 To be sure, I verified I had clean WinRAR installers and generated the same
@@ -172,7 +177,15 @@ By design, the files within the archives have been created from scratch and are
 minimally novel in the hope that they will be ineligible for copyright.
 
 While I don't hold copyright to the self-extractor stubs present in the `.exe`
-and `.bin` self-extracting test archives, they may be redistributed freely.
+and `.bin` self-extracting test archives, the `acknow.txt` needed to comply
+with the license used by some of their build dependencies has been included in
+the archive, so they can be treated as freely redistributable.
+
+(Thanks to [@bgermann](https://github.com/bgermann) for noticing that, because
+of RAR's dependencies, self-extractors made with registered copies of
+RAR/WinRAR are still technically illegal to redistribute unless you manually
+bundle copies of the licenses for the AES and CRC32 implementations rarlab
+used in the stubs.)
 
 I hereby release anything in these archives that I _do_ hold copyright to into
 the public domain using the Creative Commons
