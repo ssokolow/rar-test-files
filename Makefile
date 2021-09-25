@@ -1,12 +1,13 @@
 # Makefile to regenerate test RAR files if you have a valid RAR/WinRAR license
 #
 # Setup:
-# 1. Make sure `rar` and `dosbox` are installed on your POSIX-compliant OS
+# 1. Unpack https://www.rarlab.com/rar/rarlinux-x64-6.0.2.tar.gz to ~/bin
+#    (So `~/bin/rar/rar` and `~/bin/rar/default.sfx` exist)
 # 2. Copy your RAR/WinRAR registration key to ~/.rarreg.key
 # 3. Unpack http://www.rarlab.com/rar/rarx393.exe to ./dosbox/rar
 #    (If you ran it inside DOSBox, rename the `RAR` folder to `rar`)
 # 4. Copy your RAR/WinRAR registration key to ./dosbox/RAR/rarreg.key
-# 5. Install https://www.rarlab.com/rar/wrar601b1.exe into the default Wine
+# 5. Install https://www.rarlab.com/rar/wrar602.exe into the default Wine
 #    prefix at C:\Program Files (x86)\WinRAR\Rar.exe
 # 6. Install http://www.rarlab.com/rar/wrar393.exe into the default Wine prefix
 #    at C:\Program Files (x86)\WinRAR393\Rar.exe
@@ -16,7 +17,9 @@
 #          invocations all share the same virtual drive and temporary 8.3
 #          filenames.
 
-RAR := rar
+RAR := $(HOME)/bin/rar/rar
+LIN_SFX_PATH := $(HOME)/bin/rar/default.sfx
+
 DOSBOX := dosbox
 DOS_RAR := C:\RAR\RAR32.EXE
 DOS_ROOT := ./dosbox

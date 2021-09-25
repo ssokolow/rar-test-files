@@ -156,8 +156,6 @@ vulnerability.
 
 ## Future Plans
 
-- Switch to a pinned build of RAR for Linux from RARLab to make the process more
-  reliably reproducible.
 - Add test files for
   [multi-volume RAR archives](https://documentation.help/WinRAR/HELPArcVolumes.htm)
   with and without the `-vn` naming scheme
@@ -195,7 +193,8 @@ dedication.
 <p xmlns:dct="http://purl.org/dc/terms/" xmlns:vcard="http://www.w3.org/2001/vcard-rdf/3.0#">
   <a rel="license"
      href="http://creativecommons.org/publicdomain/zero/1.0/">
-    <img src="http://i.creativecommons.org/p/zero/1.0/88x31.png" style="border-style: none;" alt="CC0" />
+    <img src="http://i.creativecommons.org/p/zero/1.0/88x31.png"
+      style="border-style: none;" alt="CC0" />
   </a>
   <br />
   To the extent possible under law,
